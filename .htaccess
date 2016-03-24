@@ -1,0 +1,2 @@
+## Default .htaccess file
+php_value suhosin.srand.ignore 0

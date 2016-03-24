@@ -1,0 +1,13 @@
+{
+    "name": "netsyms-technologies/terran-quest-server",
+    "description": "Description of project TerranQuest Server.",
+    "authors": [
+        {
+            "name": "Skylar Ittner",
+            "email": "admin@netsyms.com"
+        }
+    ],
+    "require": {
+        "catfan/medoo": "dev-master"
+    }
+}
