@@ -23,14 +23,7 @@ require 'response.php';
 // Also inits database and stuff
 $database;
 try {
-    $database = new medoo([
-        'database_type' => 'mysql',
-        'database_name' => 'c0terranquest',
-        'server' => 'localhost',
-        'username' => 'c0terranquest',
-        'password' => 'qinkifTQ!OMY2',
-        'charset' => 'utf8'
-    ]);
+    require 'dbsettings.php';
 } catch (Exception $ex) {
     header('HTTP/1.1 500 Internal Server Error');
     sendError('Database error.  Try again later.', true);

@@ -10,8 +10,7 @@ and open the template in the editor.
         <title></title>
     </head>
     <body>
-        <?php
-        // put your code here
-        ?>
+        <h1>TerranQuest Game Server</h1>
+        <p>This service is not designed to be accessed directly; download the TerranQuest app instead.
     </body>
 </html>
