@@ -4,9 +4,54 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cd601712cf0bad7d16f8a6559ee81b64",
-    "content-hash": "9718bf7d5a744cc861b207c4e67c28f7",
+    "hash": "6a03ffb1694f3ef4b0f1e02f7ab979f0",
+    "content-hash": "6aed0888384e1dbb0d616ba71ea1970a",
     "packages": [
+        {
+            "name": "anthonymartin/geo-location",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/anthonymartin/GeoLocation.php.git",
+                "reference": "a54a562dfe8ae3eef9a5863552401d26bc80e921"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/anthonymartin/GeoLocation.php/zipball/a54a562dfe8ae3eef9a5863552401d26bc80e921",
+                "reference": "a54a562dfe8ae3eef9a5863552401d26bc80e921",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "class",
+            "autoload": {
+                "psr-0": {
+                    "AnthonyMartin": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "CC 3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Anthony Martin",
+                    "email": "anthony@replaycreative.com",
+                    "homepage": "http://replaycreative.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Retrieve bounding coordinates, distances, longitude and latitude with GeoLocation.class.php",
+            "homepage": "https://github.com/anthonymartin/GeoLocation.php",
+            "keywords": [
+                "bounding coordinates",
+                "distances",
+                "geocoding",
+                "geolocation"
+            ],
+            "time": "2013-10-25 21:13:03"
+        },
         {
             "name": "catfan/medoo",
             "version": "dev-master",
