@@ -1,29 +1,40 @@
 <?php
+
 /**
  * This file contains global settings and things that should be loaded at the
  * top of each file.
  */
-
 ob_start();
 
 header("Access-Control-Allow-Origin: *");
 
 if (strtolower($_GET['format']) == 'plain') {
     define("JSON", false);
+    header('Content-Type: text/plain');
 } else {
     define("JSON", true);
+    header('Content-Type: application/json');
 }
 
 // Composer
 require 'vendor/autoload.php';
 // API response formatters
 require 'response.php';
+// Settings file
+require 'settings.php';
 
 // Database settings
 // Also inits database and stuff
 $database;
 try {
-    require 'dbsettings.php';
+    $database = new medoo([
+        'database_type' => DB_TYPE,
+        'database_name' => DB_NAME,
+        'server' => DB_SERVER,
+        'username' => DB_USER,
+        'password' => DB_PASS,
+        'charset' => DB_CHARSET
+    ]);
 } catch (Exception $ex) {
     header('HTTP/1.1 500 Internal Server Error');
     sendError('Database error.  Try again later.', true);
