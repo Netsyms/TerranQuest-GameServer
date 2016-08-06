@@ -8,7 +8,7 @@ if (is_empty($VARS['user'])) {
     sendError("Missing data.", true);
 }
 
-$stats = $database->select('players', ['level', 'energy', 'maxenergy', 'lastping'], ['uuid' => file_get_contents("https://sso.netsyms.com/api/getguid.php?user=" . $VARS['user'])])[0];
+$stats = $database->select('players', ['level', 'energy', 'maxenergy', 'teamid', 'lastping'], ['uuid' => file_get_contents("https://sso.netsyms.com/api/getguid.php?user=" . $VARS['user'])])[0];
 
 
 $out = [];

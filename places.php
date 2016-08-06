@@ -66,7 +66,7 @@ if (is_empty($VARS['names'])) {
             'longitude[>]' => $searchbounds[0]->getLongitudeInDegrees(),
             'longitude[<]' => $searchbounds[1]->getLongitudeInDegrees(),
             'name[!]' => ''],
-        "LIMIT" => 100
+        "LIMIT" => 100 
     ]);
 }
 
@@ -82,7 +82,12 @@ foreach ($places as $place) {
     if (!$database->has('locations', ['osmid' => $place['osmid']])) {
         $database->insert('locations', ['osmid' => $place['osmid'], 'teamid' => 0]);
     }
-    $gameinfo = $database->select('locations', ['teamid', 'owneruuid'], ['osmid' => $place['osmid']])[0];
+    $gameinfo = $database->select('locations', ['locationid', 'teamid', 'owneruuid', 'currentlife', 'maxlife'], ['osmid' => $place['osmid']])[0];
+    // Reset owner info for dead places
+    if ($gameinfo['currentlife'] <= 0) {
+        $database->update('locations', ['teamid' => 0, 'owneruuid' => null], ['locationid' => $gameinfo['locationid']]);
+        $gameinfo = $database->select('locations', ['locationid', 'teamid', 'owneruuid', 'currentlife', 'maxlife'], ['osmid' => $place['osmid']])[0];
+    }
     $geo['features'][] = array("type" => "Feature",
         "geometry" => [
             "type" => "Point",
@@ -98,7 +103,7 @@ foreach ($places as $place) {
             "amenity" => ($place['amenity'] == '' ? null : $place['amenity']),
             "historic" => ($place['historic'] == '' ? null : $place['historic']),
             "tourism" => ($place['tourism'] == '' ? null : $place['tourism']),
-            "gameinfo" => ['teamid' => $gameinfo['teamid'], 'owneruuid' => $gameinfo['owneruuid']]
+            "gameinfo" => $gameinfo//['teamid' => $gameinfo['teamid'], 'owneruuid' => $gameinfo['owneruuid']]
         ]
     );
 }
