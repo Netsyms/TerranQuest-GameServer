@@ -2,6 +2,8 @@
 
 require 'required.php';
 
+require 'onlyloggedin.php';
+
 if (is_empty($VARS['user'])) {
     sendError("Missing data.", true);
 }

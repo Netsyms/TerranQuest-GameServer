@@ -5,6 +5,7 @@
  * top of each file.
  */
 ob_start();
+session_start();
 
 header("Access-Control-Allow-Origin: *");
 

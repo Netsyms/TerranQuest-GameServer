@@ -2,6 +2,8 @@
 
 require 'required.php';
 
+require 'onlyloggedin.php';
+
 if (is_empty($VARS['user'])) {
     sendError("Missing data.", true);
 }
@@ -12,4 +14,5 @@ $stats = $database->select('players', ['level', 'energy', 'maxenergy', 'lastping
 $out = [];
 $out['status'] = 'OK';
 $out['stats'] = $stats;
+$out['stats']['lastping'] = 0;
 echo json_encode($out);

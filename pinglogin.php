@@ -8,6 +8,10 @@ if (is_empty($VARS['user'])) {
 
 $guid = file_get_contents("https://sso.netsyms.com/api/getguid.php?user=" . $VARS['user']);
 
+if (is_empty($guid)) {
+    sendError("Account does not exist.", true);
+}
+
 if ($database->has('players', ['uuid' => $guid])) {
     sendOK();
 } else {
@@ -26,3 +30,7 @@ if ($database->has('players', ['uuid' => $guid])) {
 
     mail($email, "Account Update", $message, $headers);
 }
+// Setup the session
+$_SESSION['username'] = $VARS['user'];
+$_SESSION['guid'] = $_SESSION['uuid'] = $guid;
+$_SESSION['loggedin'] = true;
