@@ -15,11 +15,15 @@ if ($place['teamid'] == $user['teamid']) {
     sendError("Don't attack your own kind!", true);
 }
 
-// The underwhelming damage formulas :P
+// The damage formulas
 require_once 'type_grid.php';
-$userdrain = 5 * floor($user['level']);
-$damage = 2 * $userdrain * $TYPE_GRID[$user['teamid']][$place['teamid']];
-
+$userdrain = pow(floor($user['level']), 0.5) * 5;
+$type_mod = $TYPE_GRID[$user['teamid']][$place['teamid']];
+if ($type_mod == 0.5) {
+    $type_mod = 0.8;
+}
+$damage = pow(floor($user['level']), 0.5) * 4 * $type_mod;
+//$damage = 2 * $userdrain * $TYPE_GRID[$user['teamid']][$place['teamid']];
 // Check if action possible
 if ($user['energy'] < $userdrain) {
     sendError("Not enough life left!", true);
@@ -36,9 +40,18 @@ if ($placehp < 0) {
     $placehp = 0;
 }
 
-// Update the user's health
-// TODO: calculate XP and add to decimal portion of level
-$database->update('players', ['energy' => $userhp], ['uuid' => $_SESSION['uuid']]);
+// Update the user's health and level
+$exp = pow(pow(floor($user['level']) + 1, 2), -0.9);
+$userlevel = $user['level'] + $exp;
+// If the new level is a whole int bigger than the current
+$dolevelup = false;
+if (floor($userlevel) > floor($user['level'])) {
+    $dolevelup = true;
+    $newmaxhp = floor($userlevel) * 100;
+    $database->update('players', ['energy' => $newmaxhp, 'maxenergy' => $newmaxhp, 'level' => $userlevel], ['uuid' => $_SESSION['uuid']]);
+} else {
+    $database->update('players', ['energy' => $userhp, 'level' => $userlevel], ['uuid' => $_SESSION['uuid']]);
+}
 
 if ($placehp == 0) {
     // It's dead
@@ -48,4 +61,4 @@ if ($placehp == 0) {
     $database->update('locations', ['currentlife' => $placehp], ['locationid' => $VARS['locationid']]);
 }
 
-sendOK("Success!");
+sendOK(($dolevelup ? "Level up!" : "Success!"));

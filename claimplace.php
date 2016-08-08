@@ -28,11 +28,20 @@ if ($userhp < 0) {
     sendError("Not enough life left!", true);
 }
 
-// Update the user's health
-// TODO: calculate XP and add to decimal portion of level
-$database->update('players', ['energy' => $userhp], ['uuid' => $_SESSION['uuid']]);
+// Update the user's health and level
+$exp = pow(pow(floor($user['level']) + 1, 2), -0.9);
+$userlevel = $user['level'] + $exp;
+// If the new level is a whole int bigger than the current
+$dolevelup = false;
+if (floor($userlevel) > floor($user['level'])) {
+    $dolevelup = true;
+    $newmaxhp = floor($userlevel) * 100;
+    $database->update('players', ['energy' => $newmaxhp, 'maxenergy' => $newmaxhp, 'level' => $userlevel], ['uuid' => $_SESSION['uuid']]);
+} else {
+    $database->update('players', ['energy' => $userhp, 'level' => $userlevel], ['uuid' => $_SESSION['uuid']]);
+}
 
 // Update the place
 $database->update('locations', ['currentlife' => 100, 'maxlife' => 100, 'owneruuid' => $_SESSION['uuid'], 'teamid' => $user['teamid']], ['locationid' => $VARS['locationid']]);
 
-sendOK("Success!");
+sendOK(($dolevelup ? "Level up!" : "Success!"));
