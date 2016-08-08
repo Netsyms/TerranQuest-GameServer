@@ -16,8 +16,9 @@ if ($place['teamid'] == $user['teamid']) {
 }
 
 // The underwhelming damage formulas :P
+require_once 'type_grid.php';
 $userdrain = 5 * floor($user['level']);
-$damage = 2 * $userdrain;
+$damage = 2 * $userdrain * $TYPE_GRID[$user['teamid']][$place['teamid']];
 
 // Check if action possible
 if ($user['energy'] < $userdrain) {
