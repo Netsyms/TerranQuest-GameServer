@@ -2,11 +2,27 @@
 
 require 'required.php';
 
+require 'onlyloggedin.php';
+
 if (is_empty($VARS['user'])) {
     sendError("Missing data.", true);
 }
 
-$inv = $database->select('items', ['[>]inventory' => ['itemid' => 'itemid'], '[>]itemclasses' => ['classid', 'classid']], ['inventory.itemuuid', 'inventory.itemid', 'inventory.itemjson', 'items.itemname', 'items.itemdesc', 'itemclasses.classid', 'itemclasses.classname'], ['inventory.playeruuid' => file_get_contents("https://sso.netsyms.com/api/getguid.php?user=" . $VARS['user'])]);
+$inv = $database->select(
+        'items', [
+    '[>]inventory' => ['itemid' => 'itemid'],
+    '[>]itemclasses' => ['classid', 'classid']
+        ], [
+    'inventory.itemuuid',
+    'inventory.itemid',
+    'inventory.itemjson',
+    'items.itemname',
+    'items.itemdesc',
+    'items.itemcode',
+    'itemclasses.classid',
+    'itemclasses.classname'
+        ], ['inventory.playeruuid' => $_SESSION['uuid']]
+);
 
 $out['status'] = 'OK';
 $out['items'] = $inv;
