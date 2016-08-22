@@ -7,6 +7,8 @@
  */
 require 'required.php';
 
+//ini_set('memory_limit','32M');
+
 $placebase;
 try {
     $placebase = new medoo([
@@ -50,14 +52,16 @@ if (!is_empty($VARS['radius']) && is_numeric($VARS['radius'])) {
 
 $userlocation = GeoLocation::fromDegrees($VARS['lat'], $VARS['long']);
 $searchbounds = $userlocation->boundingCoordinates($radius, 'miles');
-
+if ($VARS['debug']) {
+    echo "got to the place data query ";
+}
 if (is_empty($VARS['names'])) {
     $places = $placebase->select('places', '*', ['AND' => [
             'latitude[>]' => $searchbounds[0]->getLatitudeInDegrees(),
             'latitude[<]' => $searchbounds[1]->getLatitudeInDegrees(),
             'longitude[>]' => $searchbounds[0]->getLongitudeInDegrees(),
             'longitude[<]' => $searchbounds[1]->getLongitudeInDegrees()],
-        "LIMIT" => 100
+        "LIMIT" => 200
     ]);
 } else {
     $places = $placebase->select('places', '*', ['AND' => [
@@ -66,7 +70,7 @@ if (is_empty($VARS['names'])) {
             'longitude[>]' => $searchbounds[0]->getLongitudeInDegrees(),
             'longitude[<]' => $searchbounds[1]->getLongitudeInDegrees(),
             'name[!]' => ''],
-        "LIMIT" => 100 
+        "LIMIT" => 200
     ]);
 }
 
@@ -78,6 +82,9 @@ header('Content-Type: application/json');
 $geo['name'] = "Places";
 $geo['type'] = 'FeatureCollection';
 $geo['features'] = [];
+if ($VARS['debug']) {
+    echo "got to the game data loop ";
+}
 foreach ($places as $place) {
     if (!$database->has('locations', ['osmid' => $place['osmid']])) {
         $database->insert('locations', ['osmid' => $place['osmid'], 'teamid' => 0]);
@@ -107,4 +114,48 @@ foreach ($places as $place) {
         ]
     );
 }
-echo json_encode($geo);
+if ($VARS['debug']) {
+    echo "got all the way to the encode ";
+}
+
+function utf8ize($d) {
+    if (is_array($d)) {
+        foreach ($d as $k => $v) {
+            $d[$k] = utf8ize($v);
+        }
+    } else if (is_object($d)) {
+        foreach ($d as $k => $v) {
+            $d->$k = utf8ize($v);
+        }
+    } else {
+        return utf8_encode($d);
+    }
+    return $d;
+}
+
+echo json_encode(utf8ize($geo));
+if ($VARS['debug']) {
+    switch (json_last_error()) {
+        case JSON_ERROR_NONE:
+            echo ' - No errors';
+            break;
+        case JSON_ERROR_DEPTH:
+            echo ' - Maximum stack depth exceeded';
+            break;
+        case JSON_ERROR_STATE_MISMATCH:
+            echo ' - Underflow or the modes mismatch';
+            break;
+        case JSON_ERROR_CTRL_CHAR:
+            echo ' - Unexpected control character found';
+            break;
+        case JSON_ERROR_SYNTAX:
+            echo ' - Syntax error, malformed JSON';
+            break;
+        case JSON_ERROR_UTF8:
+            echo ' - Malformed UTF-8 characters, possibly incorrectly encoded';
+            break;
+        default:
+            echo ' - Unknown error';
+            break;
+    }
+}
