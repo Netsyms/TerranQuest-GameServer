@@ -7,9 +7,10 @@ if (!isset($database) || ($database == null)) {
 /* If the user has a Munzee key */
 if ($database->has('munzee', ['player_uuid' => $_SESSION['uuid']])) {
 
-
+    file_put_contents("munzee.log", "Checking if user " . $_SESSION['uuid'] . " has an unexpired token\n", FILE_APPEND);
     /* Check if we need to refresh the bearer token first */
     if ($database->has('munzee', ['player_uuid' => $_SESSION['uuid'], 'expires[<=]' => (time() + 30)])) {
+        file_put_contents("munzee.log", "User " . $_SESSION['uuid'] . " has an expired token.  Refreshing.\n", FILE_APPEND);
         $url = 'https://api.munzee.com/oauth/login';
         $fields = array(
             'client_id' => urlencode(MUNZEE_KEY),
@@ -45,9 +46,10 @@ if ($database->has('munzee', ['player_uuid' => $_SESSION['uuid']])) {
 
         curl_close($ch);
 
-        $data = json_decode($result, TRUE);
-
+        $data = json_decode($result, TRUE)['data'];
+        file_put_contents("munzee.log", "$result\n\n", FILE_APPEND);
         if ($data['status_code'] == 200) {
+            file_put_contents("munzee.log", "User " . $_SESSION['uuid'] . " has a new unexpired token!\n", FILE_APPEND);
             $database->update('munzee', ['bearertoken' => $data['token']['access_token'], 'refreshtoken' => $data['token']['refresh_token'], 'expires' => $data['token']['expires']], ['player_uuid' => $_SESSION['uuid']]);
         }
     }
@@ -55,6 +57,7 @@ if ($database->has('munzee', ['player_uuid' => $_SESSION['uuid']])) {
 
     /* Check again now */
     if ($database->has('munzee', ['player_uuid' => $_SESSION['uuid'], 'expires[>]' => (time() + 30)])) {
+        file_put_contents("munzee.log", "User " . $_SESSION['uuid'] . " attempting capture of $origcode.\n", FILE_APPEND);
         $url = 'https://api.munzee.com/capture/light/';
         $header = array(
             'Content-type: application/json',
@@ -81,13 +84,14 @@ if ($database->has('munzee', ['player_uuid' => $_SESSION['uuid']])) {
             CURLOPT_TIMEOUT => 120, // time-out on response
         );
         curl_setopt_array($ch, $options);
-        
+
         $result = curl_exec($ch);
 //close connection
         curl_close($ch);
 
         $data = json_decode($result, TRUE);
-
+        file_put_contents("munzee.log", "User " . $_SESSION['uuid'] . " captured $origcode:\n", FILE_APPEND);
+        file_put_contents("munzee.log", "  $result\n\n", FILE_APPEND);
         // Add munzee capture info to response
         $returndata["messages"][] = ["title" => "Captured a Munzee!", "text" => $data["data"]["result"]];
     }

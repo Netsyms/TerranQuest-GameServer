@@ -37,8 +37,16 @@ if (is_empty($origcode)) {
     sendError("Bad code!", true);
 }
 
+try {
+    if (strpos($origcode, "munzee") > 1) {
+        include 'capturemunzee.php';
+    }
+} catch (Exception $ex) {
+    file_put_contents("munzee.log", "Error with Munzee code: $ex\n", FILE_APPEND);
+}
+
 if ($database->has('claimedcodes', ["AND" => ['code' => $origcode, 'playeruuid' => $_SESSION['uuid']]])) {
-    sendError("You've already found this code!", true);
+    //sendError("You've already found this code!", true);
 }
 
 $codearray = str_split($origcode);
@@ -64,7 +72,4 @@ $returndata = [
 
 $returndata["messages"][] = ["title" => "Found an item!", "text" => "Found one $itemname"];
 
-if (strpos($origcode, "munzee") > 1) {
-    include 'capturemunzee.php';
-}
 sendOK($itemname);
