@@ -29,6 +29,9 @@ class Random {
 }
 
 $origcode = $VARS['code'];
+$latitude = $VARS['latitude'];
+$longitude = $VARS['longitude'];
+$accuracy = $VARS['accuracy'];
 
 if (is_empty($origcode)) {
     sendError("Bad code!", true);
@@ -39,6 +42,7 @@ if ($database->has('claimedcodes', ["AND" => ['code' => $origcode, 'playeruuid' 
 }
 
 $codearray = str_split($origcode);
+
 
 $codeint = 0;
 foreach ($codearray as $chr) {
@@ -51,4 +55,16 @@ $itemcode = Random::num(1, 6);
 $database->insert('inventory', ['playeruuid' => $_SESSION['uuid'], 'itemid' => $itemcode]);
 $database->insert('claimedcodes', ['code' => $origcode, 'playeruuid' => $_SESSION['uuid']]);
 $itemname = $database->select('items', ['itemname'], ['itemid' => $itemcode])[0]['itemname'];
+
+$returndata = [
+    "status" => "OK",
+    "messages" => [
+    ]
+];
+
+$returndata["messages"][] = ["title" => "Found an item!", "text" => "Found one $itemname"];
+
+if (strpos($origcode, "munzee") > 1) {
+    include 'capturemunzee.php';
+}
 sendOK($itemname);
