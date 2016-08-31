@@ -1,4 +1,5 @@
-error*
-stats*
-vendor*
+error/
+stats/
+vendor/
 settings.php
+*.log

@@ -6,6 +6,7 @@ require 'onlyloggedin.php';
 header("Content-Type: text/html");
 
 if (!is_empty($_GET['code'])) {
+    file_put_contents("munzee.log", "User " . $_SESSION['uuid'] . " is attempting OAuth.\n", FILE_APPEND);
     $code = $_GET['code'];
     $url = 'https://api.munzee.com/oauth/login';
 // "client_id=yourclientid&client_secret=yourclientsecret&grant_type=authorization_code&code=JkEQQmjgbPavmqtJtbYEyAD7lYAMYLKBEZhlfeTn&redirect_uri=https://myfancymunzeeapp.org/handle_oauth"
@@ -33,7 +34,7 @@ if (!is_empty($_GET['code'])) {
         CURLOPT_FOLLOWLOCATION => true, // follow redirects
         CURLOPT_MAXREDIRS => 10, // stop after 10 redirects
         CURLOPT_ENCODING => "", // handle compressed
-        CURLOPT_USERAGENT => "TerranQuest Game Server (terranquest.net)", // name of client
+        CURLOPT_USERAGENT => "TerranQuest Game Server (terranquest.net; Ubuntu; Linux x86_64; PHP 7)", // name of client
         CURLOPT_AUTOREFERER => true, // set referrer on redirect
         CURLOPT_CONNECTTIMEOUT => 120, // time-out on connect
         CURLOPT_TIMEOUT => 120, // time-out on response
@@ -43,11 +44,17 @@ if (!is_empty($_GET['code'])) {
     $result = curl_exec($ch);
 //close connection
     curl_close($ch);
-    
+
     $jsonresult = json_decode($result, TRUE);
     $data = $jsonresult['data'];
+    file_put_contents("munzee.log", "User " . $_SESSION['uuid'] . " OAuth result:\n", FILE_APPEND);
+    file_put_contents("munzee.log", "  Result: $result\n\n", FILE_APPEND);
     if ($jsonresult['status_code'] == 200) {
-        $database->insert('munzee', ['bearertoken' => $data['token']['access_token'], 'refreshtoken' => $data['token']['refresh_token'], 'expires' => $data['token']['expires'], 'player_uuid' => $_SESSION['uuid']]);
+        if ($database->has('munzee', ['player_uuid' => $_SESSION['uuid']])) {
+            $database->update('munzee', ['bearertoken' => $data['token']['access_token'], 'refreshtoken' => $data['token']['refresh_token'], 'expires' => $data['token']['expires']], ['player_uuid' => $_SESSION['uuid']]);
+        } else {
+            $database->insert('munzee', ['bearertoken' => $data['token']['access_token'], 'refreshtoken' => $data['token']['refresh_token'], 'expires' => $data['token']['expires'], 'player_uuid' => $_SESSION['uuid']]);
+        }
         echo "Your Munzee account has been linked to TerranQuest!<br /><a href='about:closeme'>Back to game</a>";
         die();
     } else {
