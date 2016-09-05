@@ -33,6 +33,12 @@ $player = $database->select('players', ['energy', 'maxenergy'], ['uuid' => $_SES
 
 
 $item['itemcode'] = json_decode($item['itemcode'], true);
+if ($item['itemjson'] == "[]" || $item['itemjson'] == "") {
+    $itemusesjson = json_encode(['uses' => $item['itemcode']['uses']]);
+    $database->update('inventory', ['itemjson' => $itemusesjson], ['itemuuid' => $itemuuid]);
+}
+$itemusedata = json_decode($database->select('inventory', ['itemjson'], ['itemuuid' => $itemuuid])[0]['itemjson'], true);
+
 switch ($item['classname']) {
     case "healmagic":
         // Only use item if it will do something
@@ -42,8 +48,11 @@ switch ($item['classname']) {
                 $newhp = $player['maxenergy'];
             }
             $database->update('players', ['energy' => $newhp], ['uuid' => $_SESSION['uuid']]);
-            if ($item['itemcode']['uses'] == 1) {
+            if ($itemusedata['uses'] <= 1) {
                 $database->delete('inventory', ["AND" => ['itemuuid' => $itemuuid, 'playeruuid' => $_SESSION['uuid']]]);
+            } else if ($itemusedata['uses'] > 1) {
+                $itemusedata['uses'] -= 1;
+                $database->update('inventory', ['itemjson' => json_encode($itemusedata)], ['itemuuid' => $itemuuid]);
             }
         }
         break;
