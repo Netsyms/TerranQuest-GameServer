@@ -18,3 +18,6 @@ define("PDB_CHARSET", "latin1");
 define("GEOCACHE_KEY", "");
 define("MUNZEE_KEY", "");
 define("MUNZEE_SECRET", "");
+
+define("GOOGLEPLAY_PUBLICKEY", "");
+define("APP_STORE_SANDBOX", true);
