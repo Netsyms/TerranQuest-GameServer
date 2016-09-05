@@ -72,7 +72,7 @@ $purchase_valid = false;
 
 switch ($VARS['os']) {
     case 'android':
-        $purchase_valid = verify_market_in_app($VARS['data'], $VARS['sig'], GOOGLEPLAY_PUBLICKEY);
+        $purchase_valid = verify_market_in_app($VARS['data'], $VARS['signature'], GOOGLEPLAY_PUBLICKEY);
         break;
     case 'ios':
         $purchase_valid = verify_app_store_in_app($VARS['data'], APP_STORE_SANDBOX);
