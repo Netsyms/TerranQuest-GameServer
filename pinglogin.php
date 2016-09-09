@@ -21,7 +21,7 @@ if ($database->has('players', ['uuid' => $guid])) {
 
     $message = "This is just a quick message confirming that you have successfully linked TerranQuest to your Netsyms Technologies account.  \n\n";
     $message .= "If you have any questions or need assistance with anything, email admin@netsyms.com and we will be happy to assist you.  \n\n";
-    $message .= "Have a nice day, " . $_SESSION['user'] . ".  We hope you continue to use our services.";
+    $message .= "Have a nice day, " . $VARS['user'] . ".  We hope you continue to use our services.";
     $message .= "\n\n--------\nNetsyms Technologies\n\nThis is an automated email.  Do not reply to it.";
 
     $headers = "From: Account System <sso@netsyms.com>";
