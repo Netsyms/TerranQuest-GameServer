@@ -23,4 +23,4 @@ Setup
   for their API.  The Geocaching key isn't used for anything right now, leave it blank.
 8. Package the TerranQuest app with the URL of your server (see https://github.com/Netsyms/TerranQuest/issues/3).
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0e51d378f78242b78f60c5aaa7187259)](https://www.codacy.com/app/admin_33/TerranQuest-GameServer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Netsyms/TerranQuest-GameServer&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0e51d378f78242b78f60c5aaa7187259)](https://www.codacy.com/app/netsyms/TerranQuest-GameServer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Netsyms/TerranQuest-GameServer&amp;utm_campaign=Badge_Grade)
