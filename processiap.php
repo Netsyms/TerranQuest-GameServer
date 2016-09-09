@@ -55,12 +55,12 @@ function verify_app_store_in_app($receipt, $is_sandbox) {
         //decoding
         $app_store_response_map = json_decode($json_source);
         $app_store_response_status = $app_store_response_map->{'status'};
-        if ($app_store_response_status == 0) {//eithr OK or expired and needs to synch
+        if ($app_store_response_status == 0) {//either OK or expired and needs to synch
             //here are some fields from the json, btw.
-            $json_receipt = $app_store_response_map->{'receipt'};
-            $transaction_id = $json_receipt->{'transaction_id'};
-            $original_transaction_id = $json_receipt->{'original_transaction_id'};
-            $json_latest_receipt = $app_store_response_map->{'latest_receipt_info'};
+            //$json_receipt = $app_store_response_map->{'receipt'};
+            //$transaction_id = $json_receipt->{'transaction_id'};
+            //$original_transaction_id = $json_receipt->{'original_transaction_id'};
+            //$json_latest_receipt = $app_store_response_map->{'latest_receipt_info'};
             return true;
         } else {
             return false;
