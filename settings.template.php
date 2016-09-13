@@ -16,6 +16,8 @@ define("PDB_USER", "");
 define("PDB_PASS", "");
 define("PDB_CHARSET", "latin1");
 
+define("MIN_CLIENT_VERSION", "1.5.2");
+
 define("GEOCACHE_KEY", "");
 define("MUNZEE_KEY", "");
 define("MUNZEE_SECRET", "");
