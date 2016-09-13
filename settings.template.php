@@ -1,5 +1,6 @@
 <?php
 
+define("DEBUG", false);
 
 define("DB_TYPE", "mysql");
 define("DB_NAME", "");

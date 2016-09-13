@@ -41,16 +41,6 @@ try {
     sendError('Database error.  Try again later.', true);
 }
 
-// Show errors and stuff?
-define("DEBUG", false);
-
-// Use POST instead of GET?
-if (!is_empty($_GET['post']) && $_GET['post'] == '1') {
-    define("GET", false);
-} else {
-    define("GET", true);
-}
-
 
 if (!DEBUG) {
     error_reporting(0);
@@ -58,11 +48,15 @@ if (!DEBUG) {
     error_reporting(E_ALL);
     ini_set('display_errors', 'On');
 }
+
+
 $VARS;
-if (GET) {
-    $VARS = $_GET;
-} else {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $VARS = $_POST;
+    define("GET", false);
+} else {
+    $VARS = $_GET;
+    define("GET", true);
 }
 
 /**

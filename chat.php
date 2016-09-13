@@ -28,7 +28,7 @@ if (!preg_match('/-?[0-9]{1,3}\.[0-9]{2,}/', $VARS['long'])) {
     sendError("Longitude (long) is in the wrong format.", true);
 }
 
-if (GET) {
+if (is_empty($VARS['msg'])) {
     // Get messages
     if (is_empty($VARS['lat']) || is_empty($VARS['long'])) {
         sendError("Missing information.", true);
