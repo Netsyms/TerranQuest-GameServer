@@ -15,7 +15,7 @@ if (is_empty($guid)) {
 if ($database->has('players', ['uuid' => $guid])) {
     sendOK();
 } else {
-    $database->insert('players', ['uuid' => $guid, 'level' => 1.0, 'energy' => 100, 'maxenergy' => 100, '#lastping' => 'NOW()']);
+    $database->insert('players', ['uuid' => $guid, 'level' => 1.0, 'energy' => 100, 'maxenergy' => 100, '#lastping' => 'NOW()', 'nickname' => $VARS['user']]);
     sendOK("Successfully synced Netsyms account to TerranQuest.");
     ini_set("sendmail_from", "sso@netsyms.com");
 

@@ -10,8 +10,12 @@ if (is_empty($VARS['pass'])) {
     sendError("Missing password.", true);
 }
 
+/* Insert code to check login here, it should return "OK" or an error string */
+/* ------------------------------- */
+
 $logininfo = file_get_contents("https://sso.netsyms.com/api/simplehashauth.php?get=1&user=" . urlencode($VARS['user']) . "&pass=" . hash('sha1', $VARS['pass']));
 
+/* ------------------------------- */
 if ($logininfo != "OK") {
     sendError(str_replace("Error: ", "", $logininfo), true);
 }
@@ -20,14 +24,12 @@ $guid = file_get_contents("https://sso.netsyms.com/api/getguid.php?user=" . urle
 
 if (is_empty($guid)) {
     sendError("Account does not exist.", true);
-} else {
-    
 }
 
 if ($database->has('players', ['uuid' => $guid])) {
     sendOK();
 } else {
-    $database->insert('players', ['uuid' => $guid, 'level' => 1.0, 'energy' => 100, 'maxenergy' => 100, '#lastping' => 'NOW()']);
+    $database->insert('players', ['uuid' => $guid, 'level' => 1.0, 'energy' => 100, 'maxenergy' => 100, '#lastping' => 'NOW()', 'nickname' => $VARS['user']]);
     sendOK("Successfully synced Netsyms account to TerranQuest.");
     ini_set("sendmail_from", "sso@netsyms.com");
 
