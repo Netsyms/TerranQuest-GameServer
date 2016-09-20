@@ -4,8 +4,25 @@ if (!isset($database) || ($database == null)) {
     sendError("Please don't do that.", true);
 }
 
-/* If the user has a Munzee key */
-if ($database->has('munzee', ['player_uuid' => $_SESSION['uuid']])) {
+$saneinput = true;
+if (is_empty($latitude) || is_empty($longitude)) {
+    $saneinput = false;
+}
+
+if (!preg_match('/-?[0-9]{1,3}\.[0-9]{3,}/', $latitude)) {
+    $saneinput = false;
+}
+
+if (!preg_match('/-?[0-9]{1,3}\.[0-9]{3,}/', $longitude)) {
+    $saneinput = false;
+}
+
+if (!preg_match('/[0-9]+/', $accuracy)) {
+    $saneinput = false;
+}
+
+/* If the user has a Munzee key and input is sane */
+if ($database->has('munzee', ['player_uuid' => $_SESSION['uuid']]) && $saneinput) {
 
     file_put_contents("munzee.log", "Checking if user " . $_SESSION['uuid'] . " has an unexpired token\n", FILE_APPEND);
     /* Check if we need to refresh the bearer token first */
@@ -60,19 +77,18 @@ if ($database->has('munzee', ['player_uuid' => $_SESSION['uuid']])) {
         file_put_contents("munzee.log", "User " . $_SESSION['uuid'] . " attempting capture of $origcode.\n", FILE_APPEND);
         $url = 'https://api.munzee.com/capture/light/';
         $header = array(
-            'Content-type: application/json',
             'Authorization: ' . $database->select('munzee', ['bearertoken'], ['player_uuid' => $_SESSION['uuid']])[0]['bearertoken']
         );
-        
+
         $time = time();
-        $fields_string = 'data={"language":"EN","latitude":"'.$latitude.'","longitude":"'.$longitude.'","code":"'.$origcode.'","time":'.$time.',"accuracy":'.$accuracy.'}';
+        $fields = array('data' => '{"language":"EN","latitude":"' . $latitude . '","longitude":"' . $longitude . '","code":"' . $origcode . '","time":' . $time . ',"accuracy":' . $accuracy . '}');
 //open connection
         $ch = curl_init();
 
         $options = array(
             CURLOPT_URL => $url,
             CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $fields_string,
+            CURLOPT_POSTFIELDS => $fields,
             CURLOPT_HTTPHEADER => $header,
             CURLOPT_RETURNTRANSFER => true, // return web page
             CURLOPT_HEADER => false, // don't return headers
@@ -91,15 +107,15 @@ if ($database->has('munzee', ['player_uuid' => $_SESSION['uuid']])) {
 //close connection
         curl_close($ch);
 
-        
+
         $data = json_decode($result, TRUE);
         if ($data['status_code'] == 200) {
             file_put_contents("munzee.log", "User " . $_SESSION['uuid'] . " captured $origcode:\n", FILE_APPEND);
             file_put_contents("munzee.log", "  Sent data: $fields_string\n\n", FILE_APPEND);
             file_put_contents("munzee.log", "  Result: $result\n\n", FILE_APPEND);
-            
+
             // Add munzee capture info to response
-            $returndata["messages"][] = ["title" => "Munzee", "text" => $data["data"]["result"]];
+            $returndata["messages"][] = ["title" => $data["data"]["munzee_data"]["friendly_name"], "text" => $data["data"]["result"]];
         } else {
             file_put_contents("munzee.log", "User " . $_SESSION['uuid'] . " did not capture $origcode:\n", FILE_APPEND);
             file_put_contents("munzee.log", "  Sent headers: " . var_export($header, true) . "\n\n", FILE_APPEND);
