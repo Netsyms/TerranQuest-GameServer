@@ -24,3 +24,5 @@ define("MUNZEE_SECRET", "");
 
 define("GOOGLEPLAY_PUBLICKEY", "");
 define("APP_STORE_SANDBOX", true);
+
+define("DARKSKY_APIKEY", "");

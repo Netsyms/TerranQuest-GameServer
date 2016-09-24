@@ -13,7 +13,12 @@ $data['status'] = 'OK';
 if (!$database->has('locations', ['locationid' => $VARS['locationid']])) {
     sendError("No stats found.", true);
 }
-$gameinfo = $database->select('locations', ['locationid', 'teamid', 'owneruuid', 'currentlife', 'maxlife'], ['locationid' => $VARS['locationid']])[0];
+$gameinfo = $database->select('locations', ["[>]players" => ["owneruuid" => "uuid"]], ['locations.locationid', 'locations.teamid', 'locations.owneruuid', 'players.nickname', 'locations.currentlife', 'locations.maxlife'], ['locations.locationid' => $VARS['locationid']])[0];
+
+if ($gameinfo['owneruuid'] == null) {
+    $gameinfo['nickname'] = null;
+}
+$gameinfo['owneruuid'] = "";
 
 $data['stats'] = $gameinfo;
 echo json_encode($data);
