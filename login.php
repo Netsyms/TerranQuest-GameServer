@@ -48,3 +48,12 @@ if ($database->has('players', ['uuid' => $guid])) {
 $_SESSION['username'] = $VARS['user'];
 $_SESSION['guid'] = $_SESSION['uuid'] = $guid;
 $_SESSION['loggedin'] = true;
+
+// Give out the beta tester badge and stuff to people
+if (BETA_MODE) {
+    if (!$database->has('player_badges', ["AND" => ['playeruuid' => $guid, 'badgeid' => 1]])) {
+        $database->insert('player_badges', ['playeruuid' => $guid, 'badgeid' => 1, '#gotdate' => "NOW()"]);
+        // Give some free credits as thanks
+        $database->update('players', ['credits[+]' => 250], ['uuid' => $uuid]);
+    }
+}

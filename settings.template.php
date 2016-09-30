@@ -1,6 +1,7 @@
 <?php
 
 define("DEBUG", false);
+define("BETA_MODE", false);
 
 define("DB_TYPE", "mysql");
 define("DB_NAME", "");
