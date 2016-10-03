@@ -23,6 +23,11 @@ define("GEOCACHE_KEY", "");
 define("MUNZEE_KEY", "");
 define("MUNZEE_SECRET", "");
 
+// API key for the TerranQuest GIS server.
+// Has global terrain data and other large sets.
+// Get instructions for requesting a key at gis.terranquest.net.
+define("GIS_API_KEY", "");
+
 define("GOOGLEPLAY_PUBLICKEY", "");
 define("APP_STORE_SANDBOX", true);
 

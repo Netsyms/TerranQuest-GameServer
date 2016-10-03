@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Send an OK message.
+ * @param type $message the message
+ * @param type $die to die or not to die?
+ */
 function sendOK($message = "", $die = false) {
     if (!is_empty($message) && JSON) {
         echo '{ "status": "OK", "message": "'.$message.'" }';
@@ -15,6 +20,11 @@ function sendOK($message = "", $die = false) {
     }
 }
 
+/**
+ * Send an error message.
+ * @param type $message the message
+ * @param type $die to die or not to die?
+ */
 function sendError($error, $die = false) {
     if (JSON) {
         echo '{ "status": "ERROR", "message": "' . $error . '" }';
