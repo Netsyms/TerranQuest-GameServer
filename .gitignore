@@ -3,3 +3,4 @@ stats/
 vendor/
 settings.php
 *.log
+database.mwb.bak
