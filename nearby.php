@@ -32,7 +32,7 @@ if (!preg_match('/-?[0-9]{1,3}\.[0-9]{3,}/', $VARS['long'])) {
     sendError("Longitude (long) is in the wrong format.", true);
 }
 
-$radius = 1;
+$radius = .25;
 if (!is_empty($VARS['radius']) && is_numeric($VARS['radius'])) {
     $radius = intval($VARS['radius']);
 }
@@ -41,20 +41,18 @@ $userlocation = GeoLocation::fromDegrees($VARS['lat'], $VARS['long']);
 $searchbounds = $userlocation->boundingCoordinates($radius, 'miles');
 
 
-$people = $database->select('players', ['uuid', 'level', 'latitude', 'longitude', 'lastping'], ['AND' => [
+$people = $database->select('players', ['uuid', 'level', 'nickname', 'teamid', 'energy', 'maxenergy'], ['AND' => [
         'latitude[>]' => $searchbounds[0]->getLatitudeInDegrees(),
         'latitude[<]' => $searchbounds[1]->getLatitudeInDegrees(),
         'longitude[>]' => $searchbounds[0]->getLongitudeInDegrees(),
         'longitude[<]' => $searchbounds[1]->getLongitudeInDegrees(),
-        '#lastping[>]' => 'DATE_SUB(NOW(), INTERVAL 5 MINUTE)'],
-    "LIMIT" => 50
+        'lastping[>]' => date('Y-m-d H:i:s', strtotime('-1 minute'))],
+    "LIMIT" => 20
         ]);
-var_dump($database->error());
-if (!$people) {
-    die('[]');
-}
-for ($i = 0; $i < count($people); $i++) {
-    $people[$i]['username'] = file_get_contents('https://sso.netsyms.com/api/getname.php?uuid=' . $people[$i]['uuid']);
+
+$out = ["status" => "OK", "people" => []];
+foreach ($people as $person) {
+    $out['people'][] = ["uuid" => $person["uuid"], "name" => $person["nickname"], "team" => $person["teamid"]];
 }
 
-echo json_encode($people);
+echo json_encode($out);
