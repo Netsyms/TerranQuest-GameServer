@@ -52,7 +52,7 @@ $damage = pow(floor($user['level']), 0.5) * 4 * $type_mod * $terrain_mod * $weat
 //$damage = 2 * $userdrain * $TYPE_GRID[$user['teamid']][$place['teamid']];
 // Check if action possible
 if ($user['energy'] < $userdrain) {
-    sendError("Not enough life left!", true);
+    sendError("No life left!", true);
 }
 
 // Calculate resulting user HP

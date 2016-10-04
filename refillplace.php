@@ -19,13 +19,13 @@ if ($place['currentlife'] == 100) {
     sendError("Full!", true);
 }
 
-$userdrain = 5 * floor($user['level']);
+$userdrain = 2 * floor($user['level']);
 
 // Calculate resulting user HP
 $userhp = $user['energy'] - $userdrain;
 // Check if action possible
 if ($userhp < 0) {
-    sendError("No life!", true);
+    sendError("No life left!", true);
 }
 
 // Update the user's health and level
