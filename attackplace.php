@@ -41,7 +41,7 @@ if ($placehp < 0) {
 }
 
 // Update the user's health and level
-$exp = pow(pow(floor($user['level']) + 1, 2), -0.9);
+$exp = pow(pow(floor($user['level']) + 1, 2), -1.2);
 $userlevel = $user['level'] + $exp;
 // If the new level is a whole int bigger than the current
 $dolevelup = false;
