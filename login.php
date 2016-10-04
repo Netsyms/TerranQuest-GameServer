@@ -10,6 +10,8 @@ if (is_empty($VARS['pass'])) {
     sendError("Missing password.", true);
 }
 
+$VARS['user'] = str_replace(" ", "", $VARS['user']);
+
 /* Insert code to check login here, it should return "OK" or an error string */
 /* ------------------------------- */
 
