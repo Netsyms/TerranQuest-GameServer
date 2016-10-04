@@ -22,7 +22,33 @@ $type_mod = $TYPE_GRID[$user['teamid']][$place['teamid']];
 if ($type_mod == 0.5) {
     $type_mod = 0.8;
 }
-$damage = pow(floor($user['level']), 0.5) * 4 * $type_mod;
+
+$terrain_mod = 1.0;
+$weather_mod = 1.0;
+if (!is_empty($VARS['lat']) && !is_empty($VARS['long'])) {
+    require 'weather_inc.php';
+    $terrain = json_decode(file_get_contents("http://gis.terranquest.net/terrain.php?key=" . GIS_API_KEY . "&lat=" . $VARS['lat'] . "&long=" . $VARS['long']), TRUE);
+    if ($terrain['status'] == 'OK') {
+        $terraintype = $terrain['type'];
+        $terrain_mod = $TERRAIN_GRID[$terraintype][$user['teamid'] - 1];
+        if ($terrain_mod == 0.5) {
+            $terrain_mod = .9;
+        } else if ($terrain_mod == 2) {
+            $terrain_mod = 1.1;
+        } else if ($terrain_mod == 3) {
+            $terrain_mod = 1.3;
+        }
+    }
+    $weather_icon = $currently['icon'];
+    $weather_mod = $WEATHER_GRID[$weather_icon][$user['teamid'] - 1];
+    if ($weather_mod == 0.5) {
+            $weather_mod = .9;
+        } else if ($weather_mod == 2) {
+            $weather_mod = 1.1;
+        }
+}
+
+$damage = pow(floor($user['level']), 0.5) * 4 * $type_mod * $terrain_mod * $weather_mod;
 //$damage = 2 * $userdrain * $TYPE_GRID[$user['teamid']][$place['teamid']];
 // Check if action possible
 if ($user['energy'] < $userdrain) {
