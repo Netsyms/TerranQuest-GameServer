@@ -21,6 +21,8 @@ $userdrain = pow(floor($user['level']), 0.5) * 5;
 $type_mod = $TYPE_GRID[$user['teamid']][$place['teamid']];
 if ($type_mod == 0.5) {
     $type_mod = 0.8;
+} else if ($type_mod == 2) {
+    $type_mod = 1.5;
 }
 
 $terrain_mod = 1.0;
