@@ -33,13 +33,15 @@ if ($database->has('munzee', ['player_uuid' => $_SESSION['uuid']]) && $saneinput
             'client_id' => urlencode(MUNZEE_KEY),
             'client_secret' => urlencode(MUNZEE_SECRET),
             'grant_type' => 'refresh_token',
-            'refresh_token' => urlencode($database->select('munzee', 'refreshtoken', ['player_uuid' => $_SESSION['uuid']]))
+            'refresh_token' => $database->select('munzee', 'refreshtoken', ['player_uuid' => $_SESSION['uuid']])[0]
         );
 
         foreach ($fields as $key => $value) {
             $fields_string .= $key . '=' . $value . '&';
         }
         rtrim($fields_string, '&');
+        // Don't enable this in prod, it exposes the secret key to the public
+        //file_put_contents("munzee.log", "Sending refresh request data: $fields_string\n\n", FILE_APPEND);
 
         $ch = curl_init();
 
@@ -47,10 +49,8 @@ if ($database->has('munzee', ['player_uuid' => $_SESSION['uuid']]) && $saneinput
             CURLOPT_URL => $url,
             CURLOPT_POST => 1,
             CURLOPT_POSTFIELDS => $fields_string,
-            CURLOPT_RETURNTRANSFER => true, // return web page
+            CURLOPT_RETURNTRANSFER => 1, // return web page
             CURLOPT_HEADER => false, // don't return headers
-            CURLOPT_FOLLOWLOCATION => true, // follow redirects
-            CURLOPT_MAXREDIRS => 10, // stop after 10 redirects
             CURLOPT_ENCODING => "", // handle compressed
             CURLOPT_USERAGENT => "TerranQuest Game Server (terranquest.net; Ubuntu; Linux x86_64; PHP 7)", // name of client
             CURLOPT_AUTOREFERER => true, // set referrer on redirect
@@ -64,8 +64,9 @@ if ($database->has('munzee', ['player_uuid' => $_SESSION['uuid']]) && $saneinput
         curl_close($ch);
 
         $data = json_decode($result, TRUE)['data'];
+        $status_code = json_decode($result, TRUE)['status_code'];
         file_put_contents("munzee.log", "$result\n\n", FILE_APPEND);
-        if ($data['status_code'] == 200) {
+        if ($status_code == 200) {
             file_put_contents("munzee.log", "User " . $_SESSION['uuid'] . " has a new unexpired token!\n", FILE_APPEND);
             $database->update('munzee', ['bearertoken' => $data['token']['access_token'], 'refreshtoken' => $data['token']['refresh_token'], 'expires' => $data['token']['expires']], ['player_uuid' => $_SESSION['uuid']]);
         }
