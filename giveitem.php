@@ -14,7 +14,7 @@ if (is_empty($player) || !$database->has('players', ['nickname' => $player])) {
     sendError("Invalid nickname.", true);
 }
 
-$playeruuid = $database->select('players', ['uuid'], ['nickname' => $player])[0];
+$playeruuid = $database->select('players', ['uuid'], ['nickname' => $player])[0]['uuid'];
 
 
 $database->update('inventory', ['playeruuid' => $playeruuid], ['itemuuid' => $itemuuid]);
