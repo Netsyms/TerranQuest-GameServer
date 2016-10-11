@@ -9,21 +9,6 @@ require 'required.php';
 
 //ini_set('memory_limit','32M');
 
-$placebase;
-try {
-    $placebase = new medoo([
-        'database_type' => PDB_TYPE,
-        'database_name' => PDB_NAME,
-        'server' => PDB_SERVER,
-        'username' => PDB_USER,
-        'password' => PDB_PASS,
-        'charset' => PDB_CHARSET
-    ]);
-} catch (Exception $ex) {
-    header('HTTP/1.1 500 Internal Server Error');
-    sendError('Location database error.  Try again later.', true);
-}
-
 use AnthonyMartin\GeoLocation\GeoLocation as GeoLocation;
 
 if (is_empty($VARS['lat'])) {
@@ -50,31 +35,11 @@ if (!is_empty($VARS['radius']) && is_numeric($VARS['radius'])) {
     $radius = floatval($VARS['radius']);
 }
 
-$userlocation = GeoLocation::fromDegrees($VARS['lat'], $VARS['long']);
-$searchbounds = $userlocation->boundingCoordinates($radius, 'miles');
 if ($VARS['debug']) {
     echo "got to the place data query ";
 }
-if (is_empty($VARS['names'])) {
-    $places = $placebase->select('places', '*', ['AND' => [
-            'latitude[>]' => $searchbounds[0]->getLatitudeInDegrees(),
-            'latitude[<]' => $searchbounds[1]->getLatitudeInDegrees(),
-            'longitude[>]' => $searchbounds[0]->getLongitudeInDegrees(),
-            'longitude[<]' => $searchbounds[1]->getLongitudeInDegrees()],
-        "LIMIT" => 200
-    ]);
-} else {
-    $places = $placebase->select('places', '*', ['AND' => [
-            'latitude[>]' => $searchbounds[0]->getLatitudeInDegrees(),
-            'latitude[<]' => $searchbounds[1]->getLatitudeInDegrees(),
-            'longitude[>]' => $searchbounds[0]->getLongitudeInDegrees(),
-            'longitude[<]' => $searchbounds[1]->getLongitudeInDegrees(),
-            'name[!]' => ''],
-        "LIMIT" => 200
-    ]);
-}
 
-
+$places = json_decode(file_get_contents("http://gis.terranquest.net/places.php?key=" . GIS_API_KEY . "&lat=" . $VARS['lat'] . "&long=" . $VARS['long'] . "&radius=" . $radius), TRUE)['features'];
 
 $data['status'] = 'OK';
 $data['places'] = $places;
@@ -86,30 +51,30 @@ if ($VARS['debug']) {
     echo "got to the game data loop ";
 }
 foreach ($places as $place) {
-    if (!$database->has('locations', ['osmid' => $place['osmid']])) {
-        $database->insert('locations', ['osmid' => $place['osmid'], 'teamid' => 0]);
+    $osmid = $place['properties']['osm_id'];
+    $name = $place['properties']['name'];
+    $plong = $place['geometry']['coordinates'][0];
+    $plat = $place['geometry']['coordinates'][1];
+    if (!$database->has('locations', ['osmid' => $osmid])) {
+        $database->insert('locations', ['osmid' => $osmid, 'teamid' => 0]);
     }
-    $gameinfo = $database->select('locations', ['locationid', 'teamid', 'currentlife', 'maxlife'], ['osmid' => $place['osmid']])[0];
+    $gameinfo = $database->select('locations', ['locationid', 'teamid', 'currentlife', 'maxlife'], ['osmid' => $osmid])[0];
     // Reset owner info for dead places
     if ($gameinfo['currentlife'] <= 0) {
         $database->update('locations', ['teamid' => 0, 'owneruuid' => null], ['locationid' => $gameinfo['locationid']]);
-        $gameinfo = $database->select('locations', ['locationid', 'teamid', 'currentlife', 'maxlife'], ['osmid' => $place['osmid']])[0];
+        $gameinfo = $database->select('locations', ['locationid', 'teamid', 'currentlife', 'maxlife'], ['osmid' => $osmid])[0];
     }
     $geo['features'][] = array("type" => "Feature",
         "geometry" => [
             "type" => "Point",
             "coordinates" => [
-                floatval($place['longitude']),
-                floatval($place['latitude'])
+                floatval($plong),
+                floatval($plat)
             ]
         ],
         "properties" => [
-            "osm_id" => intval($place['osmid']),
-            "name" => ($place['name'] == '' ? null : $place['name']),
-            "name:en" => ($place['name'] == '' ? null : $place['name']),
-            "amenity" => ($place['amenity'] == '' ? null : $place['amenity']),
-            "historic" => ($place['historic'] == '' ? null : $place['historic']),
-            "tourism" => ($place['tourism'] == '' ? null : $place['tourism']),
+            "osm_id" => intval($osmid),
+            "name" => $name,
             "gameinfo" => $gameinfo//['teamid' => $gameinfo['teamid'], 'owneruuid' => $gameinfo['owneruuid']]
         ]
     );
