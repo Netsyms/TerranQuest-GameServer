@@ -4,7 +4,7 @@ require 'required.php';
 
 require 'onlyloggedin.php';
 
-if (is_empty($VARS['user']) || is_empty($VARS['lat']) || is_empty($VARS['long'])) {
+if (is_empty($VARS['lat']) || is_empty($VARS['long'])) {
     sendError("Missing data.", true);
 }
 
