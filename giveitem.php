@@ -18,3 +18,5 @@ $playeruuid = $database->select('players', ['uuid'], ['nickname' => $player])[0]
 
 
 $database->update('inventory', ['playeruuid' => $playeruuid], ['itemuuid' => $itemuuid]);
+
+sendOK();
