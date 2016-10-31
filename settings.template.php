@@ -25,3 +25,14 @@ define("GOOGLEPLAY_PUBLICKEY", "");
 define("APP_STORE_SANDBOX", true);
 
 define("DARKSKY_APIKEY", "");
+
+// Admin control panel login
+define("ADMIN_USER", "");
+define("ADMIN_PASS", "");
+
+// Geocoding API key for admin panel lookups
+define("MAPQUEST_KEY", "");
+
+// Used for timestamps in the admin panel.
+// For supported values, see http://php.net/manual/en/timezones.php
+define("TIMEZONE", "UTC");

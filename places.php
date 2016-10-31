@@ -58,11 +58,13 @@ foreach ($places as $place) {
     if (!$database->has('locations', ['osmid' => $osmid])) {
         $database->insert('locations', ['osmid' => $osmid, 'teamid' => 0]);
     }
-    $gameinfo = $database->select('locations', ['locationid', 'teamid', 'currentlife', 'maxlife'], ['osmid' => $osmid])[0];
+    $gameinfo = $database->select('locations', ["[>]players" => ["owneruuid" => "uuid"]], ['locations.locationid', 'players.nickname', 'locations.teamid', 'locations.currentlife', 'locations.maxlife'], ['osmid' => $osmid])[0];
+    //$gameinfo = $database->select('locations', ['locationid', 'teamid', 'currentlife', 'maxlife'], ['osmid' => $osmid])[0];
     // Reset owner info for dead places
     if ($gameinfo['currentlife'] <= 0) {
-        $database->update('locations', ['teamid' => 0, 'owneruuid' => null], ['locationid' => $gameinfo['locationid']]);
+        $database->update('locations', ['teamid' => 0, 'owneruuid' => null, 'maxlife' => 0], ['locationid' => $gameinfo['locationid']]);
         $gameinfo = $database->select('locations', ['locationid', 'teamid', 'currentlife', 'maxlife'], ['osmid' => $osmid])[0];
+        $gameinfo['nickname'] = "";
     }
     $geo['features'][] = array("type" => "Feature",
         "geometry" => [

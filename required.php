@@ -11,10 +11,10 @@ header("Access-Control-Allow-Origin: *");
 
 if (strtolower($_GET['format']) == 'plain') {
     define("JSON", false);
-    header('Content-Type: text/plain');
+    header('Content-Type: text/plain; charset=utf-8');
 } else {
     define("JSON", true);
-    header('Content-Type: application/json');
+    header('Content-Type: application/json; charset=utf-8');
 }
 
 // Composer
