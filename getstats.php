@@ -8,7 +8,7 @@ if (is_empty($VARS['user'])) {
     sendError("Missing data.", true);
 }
 
-$stats = $database->select('players', ['level', 'energy', 'maxenergy', 'teamid', 'lastping'], ['uuid' => $_SESSION['uuid']])[0];
+$stats = $database->select('players', ['level', 'energy', 'maxenergy', 'teamid', 'lastping'], ['nickname' => $VARS['user']])[0];
 
 
 $out = [];
