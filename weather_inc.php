@@ -5,7 +5,7 @@
  * Get the contents of the current weather with $currently
  */
 
-require 'latlong_validate.php';
+require_once 'latlong_validate.php';
 
 // Round to 2 digits (approx. 1.1km)
 $lat = number_format((float) $VARS['lat'], 2, '.', '');

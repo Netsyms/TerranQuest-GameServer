@@ -46,3 +46,25 @@ $WEATHER_GRID = [
     "wind" => [1, 1, 1, 2, 1, 1],
     "fog" => [1, 1, 1, 1, 1, 1]
 ];
+
+/**
+ * Get a multiplier for the distance between the player and place.
+ * @param float $d the number of miles between
+ * @return float The damage multiplier
+ */
+function DISTANCE_GRID($d) {
+    $distance = floor($d * 100.0);
+    if ($distance <= 5) { // ~250 feet
+        return 1;
+    } else if ($distance <= 10) { // ~500 feet
+        return 0.95;
+    } else if ($distance <= 20) { // ~1000 feet
+        return 0.8;
+    } else if ($distance <= 50) { // ~2500 feet
+        return 0.6;
+    } else if ($distance <= 100) { // 1 mile (5280 feet)
+        return 0.4;
+    } else { // Greater than 1 mile
+        return 0.2;
+    }
+}
