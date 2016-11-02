@@ -35,7 +35,7 @@ if (IN_ADMIN !== true) {
 
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Players <span class="pull-right"><small><?php echo date_tz('h:i:s a'); ?></small></span></h1>
+        <h1 class="page-header">Players <span class="pull-right"><small><?php echo date('h:i:s A'); ?></small></span></h1>
     </div>
 </div>
 
@@ -66,7 +66,7 @@ if ($_GET['msg'] == 'success') {
             <?php
             $players = $database->select("players", "*");
             foreach ($players as $player) {
-                $lastping = date_tz('Y-m-d h:i:s A', $player['lastping']);
+                $lastping = date('Y-m-d h:i:s A', strtotime($player['lastping']));
                 echo "\n"
                 . "            <tr>\n"
                 . "                <td>"

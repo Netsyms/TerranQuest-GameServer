@@ -76,7 +76,7 @@ if (!is_empty($_GET['addr'])) {
 
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Locations <span class="pull-right"><small><?php echo date_tz('h:i:s a'); ?></small></span></h1>
+        <h1 class="page-header">Locations <span class="pull-right"><small><?php echo date('h:i:s a'); ?></small></span></h1>
     </div>
 </div>
 

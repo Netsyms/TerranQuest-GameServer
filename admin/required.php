@@ -21,8 +21,6 @@ try {
     die("Database error.");
 }
 
-date_default_timezone_set('UTC');
-
 /**
  * Convert a UTC datetime to local time.
  * @param String $format see date()
@@ -30,9 +28,10 @@ date_default_timezone_set('UTC');
  * @return output of date()
  */
 function date_tz($format, $date = 'NOW', $intz = 'UTC', $outtz = TIMEZONE) {
-    $d = new DateTime($date, new DateTimeZone($intz));
-    $d->setTimezone(new DateTimeZone($outtz));
-    return $d->format($format);
+    return date($format, strtotime($date));
+    //$d = new DateTime($date, new DateTimeZone($intz));
+    //$d->setTimezone(new DateTimeZone($outtz));
+    //return $d->format($format);
 }
 
 /**

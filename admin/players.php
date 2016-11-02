@@ -18,7 +18,7 @@ $out = [
 ];
 foreach ($players as $player) {
     // Format stuff
-    $lastping = date_tz('Y-m-d h:i:s A', $player['lastping']);
+    $lastping = date('Y-m-d h:i:s A', strtotime($player['lastping']));
     
     $level = floatval($player['level']);
     $energy = intval($player['energy']);

@@ -22,7 +22,6 @@ if (!isAdmin()) {
                     <div class="col-xs-9 text-right">
                         <div class="huge">
                             <?php
-                            date_default_timezone_set("UTC");
                             echo $database->count("players", ['lastping[>]' => date('Y-m-d H:i:s', strtotime('-1 minute'))]);
                             ?>
                         </div>
