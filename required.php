@@ -9,7 +9,7 @@ session_start();
 
 header("Access-Control-Allow-Origin: *");
 
-if (strtolower($_GET['format']) == 'plain') {
+if (isset($_GET['format']) && strtolower($_GET['format']) == 'plain') {
     define("JSON", false);
     header('Content-Type: text/plain; charset=utf-8');
 } else {
@@ -65,5 +65,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  * @return boolean True if it's empty or whatever.
  */
 function is_empty($str) {
-    return (!isset($str) || $str == '' || $str == null);
+    return (is_null($str) || !isset($str) || $str == '');
 }
