@@ -26,6 +26,12 @@ define("APP_STORE_SANDBOX", true);
 
 define("DARKSKY_APIKEY", "");
 
+// List of players with special chat colors.
+// Server messages (from the admin panel) are always special.
+define("CHAT_ADMINS", ["admin"]);
+// Color for chat admin names.  Accepts any HTML named color or hexcode (#ff0000)
+define("CHAT_ADMIN_COLOR", "red");
+
 // Admin control panel login
 define("ADMIN_USER", "");
 define("ADMIN_PASS", "");

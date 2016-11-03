@@ -47,14 +47,34 @@ if (is_empty($VARS['msg'])) {
     //echo $searchbounds[1]->getLatitudeInDegrees();
     //echo $searchbounds[1]->getLongitudeInDegrees();
 
-    $msgs = $database->select('messages', ["[>]players" => ["uuid" => "uuid"]], ['messages.uuid', 'messages.message', 'messages.time', 'players.nickname'], ['AND' => [
-            'lat[>]' => $searchbounds[0]->getLatitudeInDegrees(),
-            'lat[<]' => $searchbounds[1]->getLatitudeInDegrees(),
-            'long[>]' => $searchbounds[0]->getLongitudeInDegrees(),
-            'long[<]' => $searchbounds[1]->getLongitudeInDegrees()],
+    $msgs = $database->select('messages', ["[>]players" => ["uuid" => "uuid"]], ['messages.uuid', 'messages.message', 'messages.time', 'players.nickname'], ['AND' =>
+        ["OR" =>
+            [
+                "AND #regular messages" =>
+                [
+                    'lat[>]' => $searchbounds[0]->getLatitudeInDegrees(), 'lat[<]' => $searchbounds[1]->getLatitudeInDegrees(), 'long[>]' => $searchbounds[0]->getLongitudeInDegrees(), 'long[<]' => $searchbounds[1]->getLongitudeInDegrees()
+                ],
+                "AND #global announcement messages" =>
+                [
+                    'lat' => null, 'long' => null
+                ]
+            ]
+        ],
         "ORDER" => "messages.time DESC",
         "LIMIT" => 30
     ]);
+
+    foreach ($msgs as $key => $msg) {
+        if (is_null($msg['uuid'])) {
+            $msgs[$key]['uuid'] = "0";
+            $msgs[$key]['nickname'] = "SERVER MESSAGE";
+            $msgs[$key]['color'] = CHAT_ADMIN_COLOR;
+        } else if (in_array($msg['nickname'], CHAT_ADMINS)) {
+            $msgs[$key]['color'] = CHAT_ADMIN_COLOR;
+        }
+    }
+
+
 
     echo json_encode($msgs);
 } else {
@@ -62,7 +82,7 @@ if (is_empty($VARS['msg'])) {
     if (is_empty($VARS['lat']) || is_empty($VARS['long']) || is_empty($VARS['msg'])) {
         sendError("Missing information.", true);
     }
-    
+
     $msg = strip_tags($VARS['msg']);
 
     $database->insert('messages', ['#time' => 'NOW()', 'uuid' => $_SESSION['uuid'], 'message' => $msg, 'lat' => $VARS['lat'], 'long' => $VARS['long']]);
