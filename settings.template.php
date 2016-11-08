@@ -3,6 +3,10 @@
 define("DEBUG", false);
 define("BETA_MODE", false);
 
+// A list of server addresses that can be used by the client.
+// See cluster.php for details.
+define("SERVER_URLS", []);
+
 define("DB_TYPE", "mysql");
 define("DB_NAME", "");
 define("DB_SERVER", "");
@@ -31,6 +35,8 @@ define("DARKSKY_APIKEY", "");
 define("CHAT_ADMINS", ["admin"]);
 // Color for chat admin names.  Accepts any HTML named color or hexcode (#ff0000)
 define("CHAT_ADMIN_COLOR", "red");
+// CSS styles for chat admin username.  Default is "font-weight: bold;".
+define("CHAT_ADMIN_CSS", "");
 
 // Admin control panel login
 define("ADMIN_USER", "");

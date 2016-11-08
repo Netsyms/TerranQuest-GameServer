@@ -69,8 +69,10 @@ if (is_empty($VARS['msg'])) {
             $msgs[$key]['uuid'] = "0";
             $msgs[$key]['nickname'] = "SERVER MESSAGE";
             $msgs[$key]['color'] = CHAT_ADMIN_COLOR;
+            $msgs[$key]['css'] = CHAT_ADMIN_CSS;
         } else if (in_array($msg['nickname'], CHAT_ADMINS)) {
             $msgs[$key]['color'] = CHAT_ADMIN_COLOR;
+            $msgs[$key]['css'] = CHAT_ADMIN_CSS;
         }
     }
 
@@ -84,6 +86,18 @@ if (is_empty($VARS['msg'])) {
     }
 
     $msg = strip_tags($VARS['msg']);
+
+    preg_match_all("/\@\w+/", $msg, $search, PREG_PATTERN_ORDER);
+    $privmsgto = $search[0];
+    foreach ($privmsgto as $to) {
+        $name = str_replace("@", "", $to); // Remove leading @
+        if ($database->has('players', ['nickname' => $name])) {
+            echo $name;
+            $touuid = $database->select('players', ['uuid'], ['nickname' => $name])[0]['uuid'];
+            echo $touuid;
+            $database->insert('private_messages', ['#time' => 'NOW()', 'message' => $msg, 'from_uuid' => $_SESSION['uuid'], 'to_uuid' => $touuid]);
+        }
+    }
 
     $database->insert('messages', ['#time' => 'NOW()', 'uuid' => $_SESSION['uuid'], 'message' => $msg, 'lat' => $VARS['lat'], 'long' => $VARS['long']]);
 

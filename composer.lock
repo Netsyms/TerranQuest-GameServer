@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "anthonymartin/geo-location",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/anthonymartin/GeoLocation.php.git",
-                "reference": "a54a562dfe8ae3eef9a5863552401d26bc80e921"
+                "reference": "50bf026f069296dfae11aa195d987854b2e75855"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/anthonymartin/GeoLocation.php/zipball/a54a562dfe8ae3eef9a5863552401d26bc80e921",
-                "reference": "a54a562dfe8ae3eef9a5863552401d26bc80e921",
+                "url": "https://api.github.com/repos/anthonymartin/GeoLocation.php/zipball/50bf026f069296dfae11aa195d987854b2e75855",
+                "reference": "50bf026f069296dfae11aa195d987854b2e75855",
                 "shasum": ""
             },
             "require": {
@@ -50,7 +50,7 @@
                 "geocoding",
                 "geolocation"
             ],
-            "time": "2013-10-25 21:13:03"
+            "time": "2016-09-17 18:05:14"
         },
         {
             "name": "catfan/medoo",
@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/catfan/Medoo.git",
-                "reference": "342e2d6a3bcf4adcac58e67593d63547139ab1ac"
+                "reference": "2601ffd53971866695c544c955d580d3d36b3848"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/catfan/Medoo/zipball/342e2d6a3bcf4adcac58e67593d63547139ab1ac",
-                "reference": "342e2d6a3bcf4adcac58e67593d63547139ab1ac",
+                "url": "https://api.github.com/repos/catfan/Medoo/zipball/2601ffd53971866695c544c955d580d3d36b3848",
+                "reference": "2601ffd53971866695c544c955d580d3d36b3848",
                 "shasum": ""
             },
             "require": {
@@ -105,7 +105,7 @@
                 "sql",
                 "sqlite"
             ],
-            "time": "2016-02-14 16:03:42"
+            "time": "2016-09-05 07:18:35"
         }
     ],
     "packages-dev": [],
