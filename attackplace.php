@@ -14,7 +14,7 @@ $user = $database->select('players', ['level', 'teamid', 'energy', 'maxenergy', 
 
 // This (probably) shouldn't happen in normal play
 if ($place['teamid'] == $user['teamid']) {
-    sendError("Don't attack your own kind!", true);
+    sendError("Cannot attack!", true);
 }
 
 // The damage formulas
