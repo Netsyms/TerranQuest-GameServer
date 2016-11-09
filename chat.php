@@ -92,9 +92,7 @@ if (is_empty($VARS['msg'])) {
     foreach ($privmsgto as $to) {
         $name = str_replace("@", "", $to); // Remove leading @
         if ($database->has('players', ['nickname' => $name])) {
-            echo $name;
             $touuid = $database->select('players', ['uuid'], ['nickname' => $name])[0]['uuid'];
-            echo $touuid;
             $database->insert('private_messages', ['#time' => 'NOW()', 'message' => $msg, 'from_uuid' => $_SESSION['uuid'], 'to_uuid' => $touuid]);
         }
     }
