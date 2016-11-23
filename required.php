@@ -69,14 +69,12 @@ function is_empty($str) {
 }
 
 if (is_empty($VARS['lang'])) {
-    require "lang/en_us.php";
+    require_once "lang/en_us.php";
 } else {
     switch ($VARS['lang']) {
-        case "en":
-            require "lang/en_us.php";
-        case "en_us":
-            require "lang/en_us.php";
+        case "test":
+            require_once "lang/test.php";
         default:
-            require "lang/en_us.php";
+            require_once "lang/en_us.php";
     }
 }
