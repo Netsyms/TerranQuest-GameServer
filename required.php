@@ -67,3 +67,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 function is_empty($str) {
     return (is_null($str) || !isset($str) || $str == '');
 }
+
+if (is_empty($VARS['lang'])) {
+    require "lang/en_us.php";
+} else {
+    switch ($VARS['lang']) {
+        case "en":
+            require "lang/en_us.php";
+        case "en_us":
+            require "lang/en_us.php";
+        default:
+            require "lang/en_us.php";
+    }
+}

@@ -7,11 +7,11 @@ $itemuuid = $VARS['itemuuid'];
 $player = $VARS['giveto'];
 
 if (is_empty($itemuuid) || !is_numeric($itemuuid) || !$database->has('inventory', ["AND" => ['itemuuid' => $itemuuid, 'playeruuid' => $_SESSION['uuid']]])) {
-    sendError("Invalid itemuuid.", true);
+    sendError(INVALID_ITEMID, true);
 }
 
 if (is_empty($player) || !$database->has('players', ['nickname' => $player])) {
-    sendError("Invalid nickname.", true);
+    sendError(INVALID_NICKNAME, true);
 }
 
 $playeruuid = $database->select('players', ['uuid'], ['nickname' => $player])[0]['uuid'];

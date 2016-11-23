@@ -3,11 +3,11 @@
 require 'required.php';
 
 if (is_empty($VARS['user'])) {
-    sendError("Missing username.", true);
+    sendError(USERNAME_MISSING, true);
 }
 
 if (is_empty($VARS['pass'])) {
-    sendError("Missing password.", true);
+    sendError(PASSWORD_MISSING, true);
 }
 
 $VARS['user'] = strtolower(str_replace(" ", "", $VARS['user']));
@@ -27,7 +27,7 @@ $guid = file_get_contents("https://sso.netsyms.com/api/getguid.php?user=" . urle
 /* ------------------------------- */
 
 if (is_empty($guid)) {
-    sendError("Account does not exist.", true);
+    sendError(ACCOUNT_MISSING, true);
 }
 
 if (!$database->has('players', ['uuid' => $guid])) {

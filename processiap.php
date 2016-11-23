@@ -84,5 +84,5 @@ if ($purchase_valid) {
     $database->update('players', ['credits[+]' => $creditstoadd], ['uuid' => $_SESSION['uuid']]);
     sendOK();
 } else {
-    sendError("Purchase not valid!", true);
+    sendError(INVALID_IAP, true);
 }

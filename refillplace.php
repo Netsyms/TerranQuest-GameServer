@@ -4,7 +4,7 @@ require 'required.php';
 require 'onlyloggedin.php';
 
 if (is_empty($VARS['locationid'])) {
-    sendError("No target!", true);
+    sendError(PLACE_ID_NOT_SENT, true);
 }
 
 $place = $database->select('locations', ['locationid', 'teamid', 'owneruuid', 'currentlife', 'maxlife'], ['locationid' => $VARS['locationid']])[0];
@@ -12,11 +12,11 @@ $user = $database->select('players', ['level', 'teamid', 'energy', 'maxenergy', 
 
 // This (probably) shouldn't happen in normal play
 if ($place['teamid'] != $user['teamid']) {
-    sendError("Wrong team!", true);
+    sendError(PLACE_OWNED_BY_WRONG_TEAM, true);
 }
 
 if ($place['currentlife'] == 100) {
-    sendError("Full!", true);
+    sendError(PLACE_HEALTH_IS_FULL, true);
 }
 
 $userdrain = 2 * floor($user['level']);
@@ -25,7 +25,7 @@ $userdrain = 2 * floor($user['level']);
 $userhp = $user['energy'] - $userdrain;
 // Check if action possible
 if ($userhp < 0) {
-    sendError("No life left!", true);
+    sendError(PLAYER_NO_LIFE_LEFT, true);
 }
 
 // Update the user's health and level
@@ -49,4 +49,4 @@ if ($placelife > 100) {
 // Update the place
 $database->update('locations', ['currentlife' => $placelife, 'maxlife' => 100, 'owneruuid' => $_SESSION['uuid'], 'teamid' => $user['teamid']], ['locationid' => $VARS['locationid']]);
 
-sendOK(($dolevelup ? "Level up!" : "Refilled!"));
+sendOK(($dolevelup ? PLAYER_LEVEL_UP : PLACE_HEALTH_REFILLED));

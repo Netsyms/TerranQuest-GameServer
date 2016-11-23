@@ -55,10 +55,10 @@ if (!is_empty($_GET['code'])) {
         } else {
             $database->insert('munzee', ['bearertoken' => $data['token']['access_token'], 'refreshtoken' => $data['token']['refresh_token'], 'expires' => $data['token']['expires'], 'player_uuid' => $_SESSION['uuid']]);
         }
-        echo "Your Munzee account has been linked to TerranQuest!<br /><a href='about:closeme'>Back to game</a>";
+        echo MUNZEE_LINKED_HTML;
         die();
     } else {
-        echo "Munzee is having problems right now.  Try again later.<br /><a href='about:closeme'>Back to game</a>";
+        echo MUNZEE_FAILED_HTML;
         die();
     }
 }

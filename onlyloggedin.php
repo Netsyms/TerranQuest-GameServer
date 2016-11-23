@@ -5,5 +5,5 @@
  */
 
 if ($_SESSION['loggedin'] != true) {
-    sendError('SESSION EXPIRED: Please reauthenticate.', true);
+    sendError(SESSION_EXPIRED, true);
 }

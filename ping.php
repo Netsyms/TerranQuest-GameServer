@@ -3,7 +3,7 @@
 require 'required.php';
 
 if ($_SESSION['loggedin'] != true) {
-    sendError('Your session has expired.  Please log in again.', true);
+    sendError(SESSION_EXPIRED, true);
 } else {
     
 }

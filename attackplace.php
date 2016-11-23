@@ -6,7 +6,7 @@ require 'onlyloggedin.php';
 use AnthonyMartin\GeoLocation\GeoLocation as GeoLocation;
 
 if (is_empty($VARS['locationid'])) {
-    sendError("No target!", true);
+    sendError(PLACE_ID_NOT_SENT, true);
 }
 
 $place = $database->select('locations', ['locationid', 'teamid', 'owneruuid', 'currentlife', 'maxlife', 'osmid'], ['locationid' => $VARS['locationid']])[0];
@@ -14,7 +14,7 @@ $user = $database->select('players', ['level', 'teamid', 'energy', 'maxenergy', 
 
 // This (probably) shouldn't happen in normal play
 if ($place['teamid'] == $user['teamid']) {
-    sendError("Cannot attack!", true);
+    sendError(PLACE_OWNED_BY_SAME_TEAM, true);
 }
 
 // The damage formulas
@@ -83,7 +83,7 @@ $damage = pow(floor($user['level']), 0.5) * 4 * $type_mod * $terrain_mod * $weat
 //$damage = 2 * $userdrain * $TYPE_GRID[$user['teamid']][$place['teamid']];
 // Check if action possible
 if ($user['energy'] < $userdrain) {
-    sendError("No life left!", true);
+    sendError(PLAYER_NO_LIFE_LEFT, true);
 }
 
 // Calculate resulting user HP
@@ -118,4 +118,4 @@ if ($placehp == 0) {
     $database->update('locations', ['currentlife' => $placehp], ['locationid' => $VARS['locationid']]);
 }
 
-sendOK(($dolevelup ? "Level up!" : "Success!"));
+sendOK(($dolevelup ? PLAYER_LEVEL_UP : PLACE_SUCCESS));

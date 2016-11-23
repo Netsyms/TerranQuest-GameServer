@@ -6,7 +6,7 @@ require 'onlyloggedin.php';
 $itemuuid = $VARS['itemuuid'];
 
 if (is_empty($itemuuid) || !is_numeric($itemuuid) || !$database->has('inventory', ["AND" => ['itemuuid' => $itemuuid, 'playeruuid' => $_SESSION['uuid']]])) {
-    sendError("Invalid itemuuid.", true);
+    sendError(INVALID_ITEMID, true);
 }
 
 $item = $database->select(

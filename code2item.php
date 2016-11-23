@@ -39,7 +39,7 @@ $returndata = [
 ];
 
 if (is_empty($origcode)) {
-    sendError("Bad code!", true);
+    sendError(BARCODE_INVALID, true);
 }
 
 try {
@@ -51,7 +51,7 @@ try {
 }
 
 if ($database->has('claimedcodes', ["AND" => ['code' => $origcode, 'playeruuid' => $_SESSION['uuid']]])) {
-    $returndata['messages'][] = ["title" => "Huh?", "text" => "You've already found this code!"];
+    $returndata['messages'][] = ["title" => BARCODE_ALREADY_FOUND_TITLE, "text" => BARCODE_ALREADY_FOUND_MSG];
 } else {
     if ($origcode == "http://terranquest.net/#9001") {
         // Secret awesome codez
@@ -74,7 +74,7 @@ if ($database->has('claimedcodes', ["AND" => ['code' => $origcode, 'playeruuid' 
         $database->insert('claimedcodes', ['code' => $origcode, 'playeruuid' => $_SESSION['uuid']]);
         $itemname = $database->select('items', ['itemname'], ['itemid' => $itemcode])[0]['itemname'];
     }
-    $returndata["messages"][] = ["title" => "Found an item!", "text" => "Found one $itemname"];
+    $returndata["messages"][] = ["title" => BARCODE_ITEM_FOUND_TITLE, "text" => str_replace("%1", $itemname, BARCODE_ITEM_FOUND_MSG)];
 }
 
 die(json_encode($returndata));

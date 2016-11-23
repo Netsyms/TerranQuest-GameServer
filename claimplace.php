@@ -4,7 +4,7 @@ require 'required.php';
 require 'onlyloggedin.php';
 
 if (is_empty($VARS['locationid'])) {
-    sendError("No target!", true);
+    sendError(PLACE_ID_NOT_SENT, true);
 }
 
 $place = $database->select('locations', ['locationid', 'teamid', 'owneruuid', 'currentlife', 'maxlife'], ['locationid' => $VARS['locationid']])[0];
@@ -12,11 +12,11 @@ $user = $database->select('players', ['level', 'teamid', 'energy', 'maxenergy', 
 
 // This (probably) shouldn't happen in normal play
 if ($place['teamid'] == $user['teamid']) {
-    sendError("Don't attack your own kind!", true);
+    sendError(PLACE_OWNED_BY_PLAYER_TEAM, true);
 }
 
 if ($place['currentlife'] > 0) {
-    sendError("Cannot claim!", true);
+    sendError(PLACE_NO_LIFE_CLAIM, true);
 }
 
 $userdrain = 5 * floor($user['level']);
@@ -25,7 +25,7 @@ $userdrain = 5 * floor($user['level']);
 $userhp = $user['energy'] - $userdrain;
 // Check if action possible
 if ($userhp < 0) {
-    sendError("No life left!", true);
+    sendError(PLAYER_NO_LIFE_LEFT, true);
 }
 
 // Update the user's health and level
@@ -44,4 +44,4 @@ if (floor($userlevel) > floor($user['level'])) {
 // Update the place
 $database->update('locations', ['currentlife' => 100, 'maxlife' => 100, 'owneruuid' => $_SESSION['uuid'], 'teamid' => $user['teamid']], ['locationid' => $VARS['locationid']]);
 
-sendOK(($dolevelup ? "Level up!" : "Success!"));
+sendOK(($dolevelup ? PLAYER_LEVEL_UP : PLACE_SUCCESS));
