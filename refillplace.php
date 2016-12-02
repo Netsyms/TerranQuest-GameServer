@@ -49,4 +49,4 @@ if ($placelife > 100) {
 // Update the place
 $database->update('locations', ['currentlife' => $placelife, 'maxlife' => 100, 'owneruuid' => $_SESSION['uuid'], 'teamid' => $user['teamid']], ['locationid' => $VARS['locationid']]);
 
-sendOK(($dolevelup ? PLAYER_LEVEL_UP : PLACE_HEALTH_REFILLED));
+echo json_encode(["status" => "OK", "message" => ($dolevelup ? PLAYER_LEVEL_UP : PLACE_HEALTH_REFILLED), "levelup" => ($dolevelup ? true : false)]);

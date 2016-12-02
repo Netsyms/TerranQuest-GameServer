@@ -118,4 +118,4 @@ if ($placehp == 0) {
     $database->update('locations', ['currentlife' => $placehp], ['locationid' => $VARS['locationid']]);
 }
 
-sendOK(($dolevelup ? PLAYER_LEVEL_UP : PLACE_SUCCESS));
+echo json_encode(["status" => "OK", "message" => ($dolevelup ? PLAYER_LEVEL_UP : PLACE_SUCCESS), "levelup" => ($dolevelup ? true : false)]);

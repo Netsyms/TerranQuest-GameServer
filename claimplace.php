@@ -44,4 +44,4 @@ if (floor($userlevel) > floor($user['level'])) {
 // Update the place
 $database->update('locations', ['currentlife' => 100, 'maxlife' => 100, 'owneruuid' => $_SESSION['uuid'], 'teamid' => $user['teamid']], ['locationid' => $VARS['locationid']]);
 
-sendOK(($dolevelup ? PLAYER_LEVEL_UP : PLACE_SUCCESS));
+echo json_encode(["status" => "OK", "message" => ($dolevelup ? PLAYER_LEVEL_UP : PLACE_SUCCESS), "levelup" => ($dolevelup ? true : false)]);
