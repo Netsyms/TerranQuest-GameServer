@@ -6,10 +6,9 @@ require 'onlyloggedin.php';
 header("Content-Type: text/html");
 
 if (!is_empty($_GET['code'])) {
-    file_put_contents("munzee.log", "User " . $_SESSION['uuid'] . " is attempting OAuth.\n", FILE_APPEND);
+    //file_put_contents("munzee.log", "User " . $_SESSION['uuid'] . " is attempting OAuth.\n", FILE_APPEND);
     $code = $_GET['code'];
     $url = 'https://api.munzee.com/oauth/login';
-// "client_id=yourclientid&client_secret=yourclientsecret&grant_type=authorization_code&code=JkEQQmjgbPavmqtJtbYEyAD7lYAMYLKBEZhlfeTn&redirect_uri=https://myfancymunzeeapp.org/handle_oauth"
     $fields = array(
         'client_id' => urlencode(MUNZEE_KEY),
         'client_secret' => urlencode(MUNZEE_SECRET),
@@ -47,8 +46,8 @@ if (!is_empty($_GET['code'])) {
 
     $jsonresult = json_decode($result, TRUE);
     $data = $jsonresult['data'];
-    file_put_contents("munzee.log", "User " . $_SESSION['uuid'] . " OAuth result:\n", FILE_APPEND);
-    file_put_contents("munzee.log", "  Result: $result\n\n", FILE_APPEND);
+    //file_put_contents("munzee.log", "User " . $_SESSION['uuid'] . " OAuth result:\n", FILE_APPEND);
+    //file_put_contents("munzee.log", "  Result: $result\n\n", FILE_APPEND);
     if ($jsonresult['status_code'] == 200) {
         if ($database->has('munzee', ['player_uuid' => $_SESSION['uuid']])) {
             $database->update('munzee', ['bearertoken' => $data['token']['access_token'], 'refreshtoken' => $data['token']['refresh_token'], 'expires' => $data['token']['expires']], ['player_uuid' => $_SESSION['uuid']]);

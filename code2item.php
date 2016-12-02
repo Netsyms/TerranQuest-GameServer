@@ -47,7 +47,7 @@ try {
         include 'capturemunzee.php';
     }
 } catch (Exception $ex) {
-    file_put_contents("munzee.log", "Error with Munzee code: $ex\n", FILE_APPEND);
+    //file_put_contents("munzee.log", "Error with Munzee code: $ex\n", FILE_APPEND);
 }
 
 if ($database->has('claimedcodes', ["AND" => ['code' => $origcode, 'playeruuid' => $_SESSION['uuid']]])) {
