@@ -74,6 +74,10 @@ if (is_empty($VARS['lang'])) {
     switch ($VARS['lang']) {
         case "test":
             require_once "lang/test.php";
+            break;
+        case "en-US":
+            require_once "lang/en_us.php";
+            break;
         default:
             require_once "lang/en_us.php";
     }
