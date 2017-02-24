@@ -68,7 +68,7 @@ if ($page == "logout") {
         <script src="js/metisMenu.min.js"></script>
         <!-- Custom Theme JavaScript -->
         <script src="js/sb-admin-2.js"></script>
-        
+
         <script src="js/bootstrap3-typeahead.min.js"></script>
         <script src="js/leaflet.js"></script>
         <script src="js/leaflet.markercluster.js"></script>
@@ -113,6 +113,17 @@ if ($page == "logout") {
                                     </li>
                                     <li>
                                         <a href="./?page=players&sub=active">Manage Active Sessions</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-comments-o fa-fw"></i> Chat<span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="./?page=chat">Chat Log</a>
+                                    </li>
+                                    <li>
+                                        <a href="./?page=chat&sub=system">Server Alerts</a>
                                     </li>
                                 </ul>
                             </li>
@@ -164,6 +175,9 @@ if ($page == "logout") {
                         break;
                     case "players":
                         require("pages/players.php");
+                        break;
+                    case "chat":
+                        require("pages/chat.php");
                         break;
                     case "locations":
                         require("pages/locations.php");
