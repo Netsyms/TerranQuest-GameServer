@@ -4,7 +4,7 @@
  * Strings for i18n.
  */
 /*
- * attackplace.php, claimplace.php, refillplace.php
+ * attackplace.php, claimplace.php, refillplace.php, artifactplace.php
  */
 define("PLACE_ID_NOT_SENT", "No target!");
 define("PLACE_OWNED_BY_SAME_TEAM", "Cannot attack!");
@@ -16,6 +16,7 @@ define("PLACE_OWNED_BY_WRONG_TEAM", "Wrong team!");
 define("PLACE_OWNED_BY_PLAYER_TEAM", "Don't attack your own kind!");
 define("PLACE_HEALTH_IS_FULL", "Full!");
 define("PLACE_HEALTH_REFILLED", "Refilled!");
+define("PLACE_ARTIFACT_ADDED", "Added!");
 
 /*
  * buyitem.php

@@ -20,5 +20,15 @@ if ($gameinfo['owneruuid'] == null) {
 }
 $gameinfo['owneruuid'] = "";
 
+
+// calculate artifact score
+$gameinfo['artifact'] = 0;
+
+$templife = $gameinfo['currentlife'];
+while ($templife > 100) {
+    $gameinfo['artifact']++;
+    $templife -= 75;
+}
+
 $data['stats'] = $gameinfo;
 echo json_encode($data);

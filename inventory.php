@@ -4,8 +4,9 @@ require 'required.php';
 
 require 'onlyloggedin.php';
 
-if (is_empty($VARS['user'])) {
-    sendError("Missing data.", true);
+$where = ['inventory.playeruuid' => $_SESSION['uuid']];
+if (!is_empty($VARS['classname'])) {
+    $where = ["AND" => ['inventory.playeruuid' => $_SESSION['uuid'], 'itemclasses.classname' => $VARS['classname']]];
 }
 
 $inv = $database->select(
@@ -21,8 +22,12 @@ $inv = $database->select(
     'items.itemcode',
     'itemclasses.classid',
     'itemclasses.classname'
-        ], ['inventory.playeruuid' => $_SESSION['uuid']]
+        ], $where
 );
+
+if ($inv == FALSE) {
+    $inv = [];
+}
 
 $out['status'] = 'OK';
 $out['items'] = $inv;

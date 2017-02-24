@@ -15,7 +15,7 @@ $VARS['user'] = strtolower(str_replace(" ", "", $VARS['user']));
 /* Insert code to check login here */
 /* ------------------------------- */
 
-$loginok = file_get_contents("https://sso.netsyms.com/api/simplehashauth.php?get=1&user=" . urlencode($VARS['user']) . "&pass=" . hash('sha1', $VARS['pass']));
+$loginok = file_get_contents("https://sso.netsyms.com/api/simpleauth.php?get=1&user=" . urlencode($VARS['user']) . "&pass=" . $VARS['pass']);
 
 if ($loginok != "OK") {
     sendError(str_replace("Error: ", "", $loginok), true);

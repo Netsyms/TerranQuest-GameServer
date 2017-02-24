@@ -42,11 +42,11 @@ if (floor($userlevel) > floor($user['level'])) {
 }
 
 $placelife = $place['currentlife'] + 10;
-if ($placelife > 100) {
-    $placelife = 100;
+if ($placelife > $place['maxlife']) {
+    $placelife = $place['maxlife'];
 }
 
 // Update the place
-$database->update('locations', ['currentlife' => $placelife, 'maxlife' => 100, 'owneruuid' => $_SESSION['uuid'], 'teamid' => $user['teamid']], ['locationid' => $VARS['locationid']]);
+$database->update('locations', ['currentlife' => $placelife, 'owneruuid' => $_SESSION['uuid'], 'teamid' => $user['teamid']], ['locationid' => $VARS['locationid']]);
 
 echo json_encode(["status" => "OK", "message" => ($dolevelup ? PLAYER_LEVEL_UP : PLACE_HEALTH_REFILLED), "levelup" => ($dolevelup ? true : false)]);
