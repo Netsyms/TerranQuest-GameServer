@@ -68,7 +68,7 @@ if ($database->has('claimedcodes', ["AND" => ['code' => $origcode, 'playeruuid' 
         }
 
         Random::seed($codeint);
-        $itemcode = Random::num(1, 10);
+        $itemcode = Random::num(1, 11);
 
         $database->insert('inventory', ['playeruuid' => $_SESSION['uuid'], 'itemid' => $itemcode]);
         $database->insert('claimedcodes', ['code' => $origcode, 'playeruuid' => $_SESSION['uuid']]);
